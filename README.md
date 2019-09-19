@@ -12,6 +12,12 @@ The purpose of this webinar is to introduce techniques for time series analysis.
 In this git repo, the main document follows the webinar presentation and is contained in:
 
     Measurement Noise Filtering and Time Series Prediction in Python_v4.ipynb
+    
+If you cannot download or run or view this Notebook on Github, the notebook can be viewed at this link:
+
+https://nbviewer.jupyter.org/github/riddhisw/equs_timeseries_webinar/blob/master/Measurement%20Noise%20Filtering%20and%20Time%20Series%20Prediction%20in%20Python_v4.ipynb
+
+It can take a few minutes for the equations to format themselves properly. You can toggle to view or hide the code in the second cell.
 
 In this repo, the supporting Python codebase contains the following files, each of which comprise of a list of standalone Python functions:
 
