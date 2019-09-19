@@ -2,7 +2,7 @@ from __future__ import division, print_function, absolute_import
 
 import numpy as np
 
-
+# ===========================================================================
 # ===========================================================================
 
 ## MODEL == "sinusoid":
@@ -24,6 +24,66 @@ def calc_non_lin_H(x_state):
     return A*np.sin(phi)
         
 # ===========================================================================
+# ===========================================================================
+
+## MODEL == "arkf":
+
+def psd_ar(order, f_vals, phi_vector, true_Q_var):
+    '''
+    Return S(f) / Delta_t in units of signal^2.
+    
+    Let Delta_t be time domain spacing in seconds
+    Typically one computes S(f) in units of signal^2/Hz == signal^2 s
+    But here, S(f) / Delta_t only inherits units from signal variance
+    
+    Next, note f_vals are some set of points between [0, 1].
+    f_vals represent the ratio of |f| to the sampling rate f_sampling.
+    Let f_sampling = 1 / Delta_t
+    Then |f| <= f_sampling 
+    This implies 0 <= |f| / f_sampling <= 1
+    
+    '''
+    
+    if order == 0:
+        return true_Q_var
+
+    if order >= 0:
+        
+        product= np.zeros_like(f_vals, dtype='complex128')
+        
+        for idx_k in range(1, order + 1, 1):
+            product += phi_vector[idx_k-1] * np.exp(-1j*2.*np.pi*f_vals*idx_k)
+
+        return true_Q_var / np.abs(1. - product)**2
+
+def get_autoreg_model(order, weights):
+    """ Return the dynamic state space model for AR(q) process.
+
+    Parameters:
+    ----------
+        order (`int`) : order q of an AR(q) process [Dim:  1x1].
+        weights :  coefficients of an AR(q) process [Dim: 1 x order].
+
+    Returns:
+    -------
+        a (`float64`):  state space dynamics for AR(q) process in AKF [Dim: order x order].
+    """
+    a = np.zeros((order, order))
+
+    # Allocate weights
+    a[0, :] = weights
+    # Pick off past values
+    idx = range(order-1)
+    idx2 = range(1, order, 1)
+    a[idx2, idx] = 1.0
+
+    return a
+
+# ===========================================================================
+# ===========================================================================
+
+## General Kalman Filtering:
+
 
 def kalman_filter(y_t, dims=1, 
                   x0=1., p0=100000.,
@@ -282,32 +342,3 @@ def test_function(t, name, msmt_noise_var,
 
     return signal,  signal + noise, components
     
-
-def psd_ar(order, f_vals, phi_vector, true_Q_var):
-    '''
-    Return S(f) / Delta_t in units of signal^2.
-    
-    Let Delta_t be time domain spacing in seconds
-    Typically one computes S(f) in units of signal^2/Hz == signal^2 s
-    But here, S(f) / Delta_t only inherits units from signal variance
-    
-    Next, note f_vals are some set of points between [0, 1].
-    f_vals represent the ratio of |f| to the sampling rate f_sampling.
-    Let f_sampling = 1 / Delta_t
-    Then |f| <= f_sampling 
-    This implies 0 <= |f| / f_sampling <= 1
-    
-    '''
-    
-    if order == 0:
-        return true_Q_var
-
-    if order >= 0:
-        
-        product= np.zeros_like(f_vals, dtype='complex128')
-        
-        for idx_k in range(1, order + 1, 1):
-            product += phi_vector[idx_k-1] * np.exp(-1j*2.*np.pi*f_vals*idx_k)
-
-        return true_Q_var / np.abs(1. - product)**2
-
