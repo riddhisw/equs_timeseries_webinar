@@ -15,7 +15,7 @@ In this git repo, the main document follows the webinar presentation and is cont
     
 If you cannot download or run or view this Notebook on Github, the notebook can be viewed at this link:
 
-https://nbviewer.jupyter.org/github/riddhisw/equs_timeseries_webinar/blob/master/Measurement%20Noise%20Filtering%20and%20Time%20Series%20Prediction%20in%20Python_v4.ipynb?flush_cache=true
+https://nbviewer.jupyter.org/github/riddhisw/equs_timeseries_webinar/blob/master/Measurement%20Noise%20Filtering%20and%20Time%20Series%20Prediction%20in%20Python_v5.ipynb?flush_cache=true
 
 It can take a few minutes for the equations to format themselves properly. You can toggle to view or hide the code in the second cell.
 
